@@ -36,7 +36,7 @@ jobs:
         - macos-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         # Fetch all tags
         fetch-depth: 0
@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         # Fetch all tags
         fetch-depth: 0
@@ -85,7 +85,7 @@ jobs:
       (github.ref == 'refs/heads/master' || startsWith(github.event.ref, 'refs/tags'))
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         # Fetch all tags
         fetch-depth: 0
