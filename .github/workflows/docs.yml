@@ -13,6 +13,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.head_ref }}
   cancel-in-progress: true
 
+env:
+  PYTHONUNBUFFERED: '1'
+  FORCE_COLOR: '1'
+
 jobs:
   build:
     runs-on: ubuntu-latest
