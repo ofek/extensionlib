@@ -7,7 +7,7 @@ name = "extensionlib"
 description = "The toolkit for building extension modules"
 readme = "README.md"
 requires-python = ">=3.7"
-license = "MIT"
+license = { text = "MIT" }
 keywords = []
 authors = [
   { name = "Ofek Lev", email = "oss@ofek.dev" },
