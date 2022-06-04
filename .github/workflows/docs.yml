@@ -10,7 +10,7 @@ on:
     - master
 
 concurrency:
-  group: build-docs-${{ github.event.pull_request.number || github.sha }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.head_ref }}
   cancel-in-progress: true
 
 jobs:
