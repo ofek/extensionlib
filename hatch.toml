@@ -1,0 +1,67 @@
+[envs.default]
+dependencies = [
+  "coverage[toml]>=6.2",
+  "pytest",
+  "pytest-cov",
+  "pytest-mock",
+  "pytest-randomly",
+]
+[envs.default.scripts]
+full = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/extension --cov=tests {args:tests}"
+dev = "pytest -p no:randomly --no-cov {args:tests}"
+
+[envs.test.overrides]
+env.HERMETIC_TESTS.type = [
+  { value = "container", if = ["true"] },
+  "virtual",
+]
+
+[[envs.test.matrix]]
+python = ["37", "38", "39", "310", "311"]
+
+[envs.lint]
+detached = true
+dependencies = [
+  "flake8>=4.0.1",
+  "flake8-bugbear>=22.3.23",
+  "flake8-quotes>=3.3.1",
+  "black>=22.3.0",
+  "isort>=5.10.1",
+  "mypy>=0.942",
+]
+[envs.lint.scripts]
+typing = "mypy --install-types --non-interactive {args:src/extension tests}"
+style = [
+  "flake8 {args:.}",
+  "black --check --diff {args:.}",
+  "isort --check-only --diff {args:.}",
+]
+fmt = [
+  "isort {args:.}",
+  "black {args:.}",
+  "style",
+]
+all = [
+  "style",
+  "typing",
+]
+
+[envs.docs]
+dependencies = [
+  "mkdocs~=1.3.0",
+  "mkdocs-material~=8.3.1",
+  # Plugins
+  "mkdocs-minify-plugin~=0.5.0",
+  "mkdocs-git-revision-date-localized-plugin~=1.0.1",
+  "mkdocstrings-python~=0.7.0",
+  # Extensions
+  "pymdown-extensions~=9.4.0",
+  "mkdocs-material-extensions~=1.0.3",
+  # Necessary for syntax highlighting in code blocks
+  "pygments~=2.12.0",
+]
+[envs.docs.env-vars]
+SOURCE_DATE_EPOCH = "1580601600"
+[envs.docs.scripts]
+build = "mkdocs build --clean --strict {args}"
+serve = "mkdocs serve --dev-addr localhost:8000 {args}"
