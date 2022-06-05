@@ -1,5 +1,5 @@
 site_name: extensionlib
-site_description: Toolkit for building extension modules
+site_description: The toolkit for building Python extension modules
 site_author: PyPA
 site_url: https://extensionlib.pypa.io
 repo_name: pypa/extensionlib

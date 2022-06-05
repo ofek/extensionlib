@@ -10,12 +10,6 @@ dependencies = [
 full = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/extension --cov=tests {args:tests}"
 dev = "pytest -p no:randomly --no-cov {args:tests}"
 
-[envs.test.overrides]
-env.HERMETIC_TESTS.type = [
-  { value = "container", if = ["true"] },
-  "virtual",
-]
-
 [[envs.test.matrix]]
 python = ["37", "38", "39", "310", "311"]
 

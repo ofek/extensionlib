@@ -28,7 +28,9 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
   "Topic :: Software Development :: Build Tools",
 ]
-dependencies = []
+dependencies = [
+  "importlib-metadata; python_version < '3.8'",
+]
 dynamic = ["version"]
 
 [project.urls]
