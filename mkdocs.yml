@@ -1,11 +1,11 @@
 site_name: extensionlib
-site_description: Toolkit for building extension modules
-site_author: PyPA
-site_url: https://extensionlib.pypa.io
-repo_name: pypa/extensionlib
-repo_url: https://github.com/pypa/extensionlib
+site_description: The toolkit for building Python extension modules
+site_author: Ofek Lev
+site_url: https://ofek.dev/extensionlib/
+repo_name: ofek/extensionlib
+repo_url: https://github.com/ofek/extensionlib
 edit_uri: blob/master/docs
-copyright: 'Copyright &copy; PyPA 2022-present'
+copyright: 'Copyright &copy; Ofek Lev 2022-present'
 
 docs_dir: docs
 site_dir: site
@@ -42,7 +42,9 @@ theme:
 
 nav:
   - About: index.md
-  - Usage: usage.md
+  - Usage:
+    - Builders: builders.md
+    - Runners: runners.md
   - Reference:
     - Interface: interface.md
     - Utilities: utilities.md
@@ -72,6 +74,9 @@ plugins:
             show_if_no_docstring: true
             # Signatures/annotations
             show_signature_annotations: true
+            # Other
+            show_bases: false
+            show_source: false
       watch:
         - src/extension
 
@@ -133,9 +138,13 @@ markdown_extensions:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/pypa
-    - icon: material/web
-      link: https://packaging.python.org
+      link: https://github.com/ofek
+    - icon: fontawesome/solid/blog
+      link: https://ofek.dev/words/
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/Ofekmeister
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/ofeklev/
 extra_css:
   - assets/css/custom.css
   - https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css
