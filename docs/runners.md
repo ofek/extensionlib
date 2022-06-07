@@ -18,13 +18,13 @@ Users are expected to configure their extension modules in TOML as an [array of 
 === ":octicons-file-code-16: pyproject.toml"
 
     ```toml
-    [[tool.extensions.spam]]
+    [[tool.extensionlib.spam]]
     ...
-    [[tool.extensions.example]]
+    [[tool.extensionlib.example]]
     ...
-    [[tool.extensions.example]]
+    [[tool.extensionlib.example]]
     ...
-    [[tool.extensions.foo]]
+    [[tool.extensionlib.foo]]
     ...
     ```
 
@@ -51,7 +51,7 @@ To illustrate, users can enable the following:
 === ":octicons-file-code-16: pyproject.toml"
 
     ```toml
-    [[tool.extensions.spam]]
+    [[tool.extensionlib.spam]]
     enable-by-default = false
     ...
     ```
@@ -65,7 +65,7 @@ Builders can [indicate][extension.interface.ExtensionModules.needs_build] that c
 === ":octicons-file-code-16: pyproject.toml"
 
     ```toml
-    [[tool.extensions.spam]]
+    [[tool.extensionlib.spam]]
     force-rebuild = true
     ...
     ```
