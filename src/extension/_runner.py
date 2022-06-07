@@ -67,6 +67,10 @@ class Config:
 
 class BuildRunner:
     def __init__(self, root: str) -> None:
+        """
+        Args:
+            root: The project's root directory.
+        """
         self.__root = root
         self.__builders = BuilderCache()
 
@@ -78,16 +82,26 @@ class BuildRunner:
     def builders(self) -> BuilderCache:
         return self.__builders
 
-    def build(self, builder_name: str, configs: list[dict], build_data: dict) -> None:
+    def build(self, builder_name: str, config_entries: list[dict], data: dict) -> None:
+        """
+        Args:
+            builder_name: The name of the registered [extension module builder][extension.interface.ExtensionModules]
+                          with which to use.
+            config_entries: A list of user defined configuration each intended for a distinct instance of
+                            the chosen builder.
+            data: A mapping that will persist for the life of all extension module builders that may be mutated by
+                  each one. The primary use case is to set builder-specific data e.g. a wheel builder may recognize
+                  tag-related options.
+        """
         builder_class = self.builders.get(builder_name)
         if builder_class is None:
             raise ValueError(f'Unknown extension module builder: {builder_name}')
 
-        for c in configs:
-            config = Config(builder_name, c)
+        for config_entry in config_entries:
+            config = Config(builder_name, config_entry)
             if not config.enabled():
                 continue
 
             builder = builder_class(builder_name, self.root, config.builder_config)
             if config.force_rebuild or builder.needs_build():
-                builder.build(build_data)
+                builder.build(data)

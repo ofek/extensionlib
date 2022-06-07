@@ -42,7 +42,9 @@ theme:
 
 nav:
   - About: index.md
-  - Usage: usage.md
+  - Usage:
+    - Builders: builders.md
+    - Runners: runners.md
   - Reference:
     - Interface: interface.md
     - Utilities: utilities.md
@@ -72,6 +74,9 @@ plugins:
             show_if_no_docstring: true
             # Signatures/annotations
             show_signature_annotations: true
+            # Other
+            show_bases: false
+            show_source: false
       watch:
         - src/extension
 
