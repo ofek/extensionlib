@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://extensionlib.pypa.io/</loc>
+         <loc>https://ofek.dev/extensionlib/</loc>
          <lastmod>2020-02-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://extensionlib.pypa.io/history/</loc>
+         <loc>https://ofek.dev/extensionlib/builders/</loc>
          <lastmod>2020-02-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://extensionlib.pypa.io/interface/</loc>
+         <loc>https://ofek.dev/extensionlib/history/</loc>
          <lastmod>2020-02-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://extensionlib.pypa.io/usage/</loc>
+         <loc>https://ofek.dev/extensionlib/interface/</loc>
          <lastmod>2020-02-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://extensionlib.pypa.io/users/</loc>
+         <loc>https://ofek.dev/extensionlib/runners/</loc>
          <lastmod>2020-02-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://extensionlib.pypa.io/utilities/</loc>
+         <loc>https://ofek.dev/extensionlib/users/</loc>
+         <lastmod>2020-02-02</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ofek.dev/extensionlib/utilities/</loc>
          <lastmod>2020-02-02</lastmod>
          <changefreq>daily</changefreq>
     </url>
