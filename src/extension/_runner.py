@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import sys
 from copy import deepcopy
-from typing import TYPE_CHECKING, Optional, Type
+from typing import TYPE_CHECKING, Generator, Optional, Type
 
 from .constants import ENTRY_POINT_GROUP
-from .utils import get_env_option
+from .utils import get_env_option, normalize_relative_path
 
 if TYPE_CHECKING:
     from .interface import ExtensionModules
@@ -38,16 +38,23 @@ class BuilderCache:
             for entry_point in distribution.entry_points:
                 if entry_point.group != ENTRY_POINT_GROUP:
                     continue
-                elif entry_point.name != name:
-                    self.__seen.setdefault(name, entry_point)
-                elif builder is None:
+                elif entry_point.name == name:
                     builder = entry_point.load()
+                else:
+                    self.__seen.setdefault(entry_point.name, entry_point)
 
             if builder is not None:
                 self.__builders[name] = builder
                 return builder
 
         self.__search_exhausted = True
+
+    def __getitem__(self, item: str) -> Type[ExtensionModules]:
+        self.get(item)
+        return self.__builders[item]
+
+    def __contains__(self, item: str) -> bool:
+        return self.get(item) is not None
 
 
 class Config:
@@ -56,7 +63,6 @@ class Config:
 
         # Extract runner configuration
         self.enable_by_default = config.pop('enable-by-default', True)
-        self.force_rebuild = config.pop('force-rebuild', False)
 
         self.builder_name = builder_name
         self.builder_config = config
@@ -66,12 +72,14 @@ class Config:
 
 
 class BuildRunner:
-    def __init__(self, root: str) -> None:
+    def __init__(self, root: str, metadata: dict) -> None:
         """
         Args:
             root: The project's root directory.
+            metadata: The [PEP 621][] project metadata.
         """
         self.__root = root
+        self.__metadata = metadata
         self.__builders = BuilderCache()
 
     @property
@@ -79,29 +87,53 @@ class BuildRunner:
         return self.__root
 
     @property
+    def metadata(self) -> dict:
+        return self.__metadata
+
+    @property
     def builders(self) -> BuilderCache:
         return self.__builders
 
-    def build(self, builder_name: str, config_entries: list[dict], data: dict) -> None:
+    def inputs(self) -> list[str]:
+        """
+        Returns:
+            The complete list of builder [`inputs`][extension.interface.ExtensionModules.inputs].
+        """
+        return [normalize_relative_path(path) for builder in self.get_builders() for path in builder.inputs()]
+
+    def outputs(self) -> list[str]:
+        """
+        Returns:
+            The complete list of builder [`outputs`][extension.interface.ExtensionModules.outputs].
+        """
+        return [normalize_relative_path(path) for builder in self.get_builders() for path in builder.outputs()]
+
+    def generate_inputs(self, data: dict) -> None:
         """
         Args:
-            builder_name: The name of the registered [extension module builder][extension.interface.ExtensionModules]
-                          with which to use.
-            config_entries: A list of user defined configuration each intended for a distinct instance of
-                            the chosen builder.
-            data: A mapping that will persist for the life of all extension module builders that may be mutated by
-                  each one. The primary use case is to set builder-specific data e.g. a wheel builder may recognize
-                  tag-related options.
+            data: Options specific to source distributions.
         """
-        builder_class = self.builders.get(builder_name)
-        if builder_class is None:
-            raise ValueError(f'Unknown extension module builder: {builder_name}')
+        for builder in self.get_builders():
+            builder.generate_inputs(data)
 
-        for config_entry in config_entries:
-            config = Config(builder_name, config_entry)
-            if not config.enabled():
-                continue
+    def generate_outputs(self, data: dict) -> None:
+        """
+        Args:
+            data: Options specific to built distributions.
+        """
+        for builder in self.get_builders():
+            builder.generate_outputs(data)
 
-            builder = builder_class(builder_name, self.root, config.builder_config)
-            if config.force_rebuild or builder.needs_build():
-                builder.build(data)
+    def get_builders(self) -> Generator[ExtensionModules, None, None]:
+        extension_modules_config = self.metadata.get(ENTRY_POINT_GROUP, {})
+        for builder_name in extension_modules_config:
+            if builder_name not in self.builders:
+                raise ValueError(f'Unknown extension module builder: {builder_name}')
+
+        for builder_name, config_entries in extension_modules_config.items():
+            for config_entry in config_entries:
+                config = Config(builder_name, config_entry)
+                if not config.enabled():
+                    continue
+
+                yield self.builders[builder_name](builder_name, self.root, self.metadata, config.builder_config)

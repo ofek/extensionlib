@@ -7,35 +7,41 @@ Managing the building of extension modules is done using an instance of [`BuildR
 ```python
 from extension.runner import BuildRunner
 
-runner = BuildRunner('.')
+...
+runner = BuildRunner('.', user_config['project'])
 ...
 ```
 
 ## Usage
 
-Users are expected to configure their extension modules in TOML as an [array of tables](https://toml.io/en/v1.0.0#array-of-tables) with the final sub-table name referring to a [plugin](builders.md#plugin-registration). For example:
+### Generation
 
-=== ":octicons-file-code-16: pyproject.toml"
-
-    ```toml
-    [[tool.extensionlib.spam]]
-    ...
-    [[tool.extensionlib.example]]
-    ...
-    [[tool.extensionlib.example]]
-    ...
-    [[tool.extensionlib.foo]]
-    ...
-    ```
-
-Runners must build each entry:
+[Inputs][extension.interface.ExtensionModules.generate_inputs]:
 
 ```python
 build_data = {}
-extensions = user_config['tool']['extensions']
+runner.generate_inputs(build_data)
+```
 
-for builder_name, config_entries in extensions.items():
-    runner.build(builder_name, configs, build_data)
+[Outputs][extension.interface.ExtensionModules.generate_outputs]:
+
+```python
+build_data = {}
+runner.generate_outputs(build_data)
+```
+
+### Artifact inspection
+
+[Inputs][extension.interface.ExtensionModules.inputs]:
+
+```python
+inputs = runner.inputs()
+```
+
+[Outputs][extension.interface.ExtensionModules.outputs]:
+
+```python
+outputs = runner.outputs()
 ```
 
 ## Options
@@ -51,21 +57,9 @@ To illustrate, users can enable the following:
 === ":octicons-file-code-16: pyproject.toml"
 
     ```toml
-    [[tool.extensionlib.spam]]
+    [[project.extensions.spam]]
     enable-by-default = false
     ...
     ```
 
 with the environment variable `PY_EXTENSION_BUILDER_SPAM_ENABLE`.
-
-### Forced builds
-
-Builders can [indicate][extension.interface.ExtensionModules.needs_build] that config entries should be skipped, maybe because no files have changed. Users can override this behavior with the `force-rebuild` option:
-
-=== ":octicons-file-code-16: pyproject.toml"
-
-    ```toml
-    [[tool.extensionlib.spam]]
-    force-rebuild = true
-    ...
-    ```

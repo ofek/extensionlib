@@ -1,0 +1,14 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mock-a"
+version = "0.0.1"
+
+[project.entry-points.extensions]
+mock-a = "mock_a:MockAExtensionModules"
+mock-aa = "mock_a:MockAExtensionModules"
+
+[project.entry-points.other]
+mock-a = "mock_a:MockAExtensionModules"
