@@ -6,9 +6,17 @@ from .utils import get_env_option
 
 
 class ExtensionModules(ABC):
-    def __init__(self, name: str, root: str, config: dict) -> None:
+    def __init__(self, name: str, root: str, metadata: dict, config: dict) -> None:
+        """
+        Args:
+            name: The name used to register this extension module builder.
+            root: The project's root directory.
+            metadata: The [PEP 621][] project metadata.
+            config: The raw user-defined configuration.
+        """
         self.__name = name
         self.__root = root
+        self.__metadata = metadata
         self.__config = config
 
     @property
@@ -26,6 +34,13 @@ class ExtensionModules(ABC):
         return self.__root
 
     @property
+    def metadata(self) -> dict:
+        """
+        The [PEP 621][] project metadata.
+        """
+        return self.__metadata
+
+    @property
     def config(self) -> dict:
         """
         The raw user-defined configuration.
@@ -33,32 +48,48 @@ class ExtensionModules(ABC):
         return self.__config
 
     @abstractmethod
-    def files(self) -> list[str]:
+    def inputs(self) -> list[str]:
         """
         Returns:
-            The complete list of files that are targeted for [generation][extension.interface.ExtensionModules.build].
+            The complete list of files or directories that are targeted for generation by the
+                [`generate_inputs`][extension.interface.ExtensionModules.generate_inputs] method.
+                These are any intermediate artifacts that are required to generate the
+                [`outputs`][extension.interface.ExtensionModules.outputs], ideally even without network access.
+
+
                 Each path must be relative to the [project root][extension.interface.ExtensionModules.root].
         """
 
     @abstractmethod
-    def build(self, data: dict) -> None:
-        """
-        This method builds the extension modules. Any generated file that is not returned by the
-        [`files`][extension.interface.ExtensionModules.files] method is in violation of the spec and will be ignored.
-
-        Args:
-            data: A mapping that will persist for the life of all extension module builders that may be mutated by
-                  each one. The primary use case is to set builder-specific data e.g. a wheel builder may recognize
-                  tag-related options.
-        """
-
-    def needs_build(self) -> bool:
+    def outputs(self) -> list[str]:
         """
         Returns:
-            A boolean indicating whether or not a build is necessary. For example, if no source files have changed
-                implementations may return `False`.
+            The complete list of files or directories that are targeted for generation by the
+                [`generate_outputs`][extension.interface.ExtensionModules.generate_outputs] method.
+                These are the extension modules and anything else that is required in the built distribution.
+
+                Each path must be relative to the [project root][extension.interface.ExtensionModules.root].
         """
-        return True
+
+    @abstractmethod
+    def generate_inputs(self, data: dict) -> None:
+        """
+        This method generates the files or directories that are returned by the
+        [`inputs`][extension.interface.ExtensionModules.inputs] method.
+
+        Args:
+            data: Options specific to source distributions.
+        """
+
+    @abstractmethod
+    def generate_outputs(self, data: dict) -> None:
+        """
+        This method generates the files or directories that are returned by the
+        [`outputs`][extension.interface.ExtensionModules.outputs] method.
+
+        Args:
+            data: Options specific to built distributions.
+        """
 
     def get_env_option(self, option: str) -> str:
         """

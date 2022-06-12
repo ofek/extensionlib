@@ -43,6 +43,7 @@ theme:
 nav:
   - About: index.md
   - Usage:
+    - Config: config.md
     - Builders: builders.md
     - Runners: runners.md
   - Reference:

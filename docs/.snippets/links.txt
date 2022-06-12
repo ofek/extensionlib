@@ -1,1 +1,2 @@
+[PEP 621]: https://peps.python.org/pep-0621/
 [extension modules]: https://docs.python.org/3/extending/extending.html

@@ -34,10 +34,10 @@ dependencies = [
 dynamic = ["version"]
 
 [project.urls]
-Homepage = "https://extensionlib.pypa.io"
-History = "https://extensionlib.pypa.io/history/"
-Tracker = "https://github.com/pypa/extensionlib/issues"
-Source = "https://github.com/pypa/extensionlib"
+Homepage = "https://ofek.dev/extensionlib/"
+History = "https://ofek.dev/extensionlib/history/"
+Tracker = "https://github.com/ofek/extensionlib/issues"
+Source = "https://github.com/ofek/extensionlib"
 
 [tool.hatch.version]
 source = "vcs"
@@ -80,6 +80,9 @@ use_parentheses = true
 
 [tool.coverage.run]
 branch = true
+omit = [
+  "tests/mocks/**/*",
+]
 
 [tool.coverage.report]
 exclude_lines = [

@@ -13,21 +13,29 @@ class ExampleExtensionModules(ExtensionModules):
 
 ## Plugin registration
 
-Every builder your project implements must be defined under the `extension_modules` [entry point group](https://peps.python.org/pep-0621/#entry-points):
+Every builder a project implements must be defined under the `extensions` [entry point](https://peps.python.org/pep-0621/#entry-points) group:
 
 === ":octicons-file-code-16: pyproject.toml"
 
     ```toml
-    [project.entry-points.extension_modules]
+    [project.entry-points.extensions]
     example = "pkg:ExampleExtensionModules"
     ```
 
 Users select builders with the name of their plugin (in this case `example`).
 
-## Required methods
+## Inputs
 
-The required methods are [`files`][extension.interface.ExtensionModules.files] and [`build`][extension.interface.ExtensionModules.build].
+Inputs are any intermediate artifacts that are required to generate the [outputs](#outputs), ideally even without network access.
 
-The [`files`][extension.interface.ExtensionModules.files] method returns a list of relative file paths which build backends will (if present) include in wheels and other tools may use for cleaning purposes.
+The required methods are [`inputs`][extension.interface.ExtensionModules.inputs] and [`generate_inputs`][extension.interface.ExtensionModules.generate_inputs].
 
-The [`build`][extension.interface.ExtensionModules.build] method MUST NOT generate any file that is not returned by the [`files`][extension.interface.ExtensionModules.files] method.
+## Outputs
+
+Outputs are the extension modules and anything else that is required in the built distribution.
+
+The required methods are [`outputs`][extension.interface.ExtensionModules.outputs] and [`generate_outputs`][extension.interface.ExtensionModules.generate_outputs].
+
+## Build data
+
+Both generation methods accept a `data` parameter that is a mapping that will persist for the life of all extension module builders that may be mutated by each one. The primary use case is to set target-specific data e.g. a wheel target may recognize tag-related options.
