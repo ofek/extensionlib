@@ -33,16 +33,13 @@ jobs:
         os:
         - ubuntu-latest
         - windows-latest
-        - macos-latest
+        # - macos-latest
 
     steps:
     - uses: actions/checkout@v3
       with:
         # Fetch all tags
         fetch-depth: 0
-
-    - name: Upgrade build dependencies
-      run: python -m pip install --upgrade pip
 
     - name: Build wheels
       uses: pypa/cibuildwheel@2.6.0
@@ -81,11 +78,11 @@ jobs:
   binary-wheels-arm:
     name: Build Linux wheels for ARM
     runs-on: ubuntu-latest
-    # Very slow, no need to run on PRs
-    if: >
-      github.event_name == 'push'
-      &&
-      (github.ref == 'refs/heads/master' || startsWith(github.event.ref, 'refs/tags'))
+    # # Very slow, no need to run on PRs
+    # if: >
+    #   github.event_name == 'push'
+    #   &&
+    #   (github.ref == 'refs/heads/master' || startsWith(github.event.ref, 'refs/tags'))
 
     steps:
     - uses: actions/checkout@v3
