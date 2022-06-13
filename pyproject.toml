@@ -7,7 +7,7 @@ name = "extensionlib"
 description = "The toolkit for building extension modules"
 readme = "README.md"
 requires-python = ">=3.7"
-license = { text = "MIT" }
+license = "MIT"
 keywords = []
 authors = [
   { name = "Ofek Lev", email = "oss@ofek.dev" },
@@ -43,7 +43,7 @@ Source = "https://github.com/ofek/extensionlib"
 source = "vcs"
 
 [tool.hatch.build.hooks.vcs]
-version-file = "src/extension/_version.py"
+version-file = "src/extension/version.py"
 
 [tool.hatch.build.targets.sdist]
 [tool.hatch.build.targets.wheel]
@@ -51,7 +51,7 @@ packages = ["src/extension"]
 
 [tool.hatch.build.targets.wheel.hooks.mypyc]
 enable-by-default = false
-dependencies = ["hatch-mypyc>=0.9.1"]
+dependencies = ["hatch-mypyc>=0.10.0"]
 require-runtime-dependencies = true
 
 [tool.mypy]

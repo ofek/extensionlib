@@ -48,6 +48,7 @@ class BuilderCache:
                 return builder
 
         self.__search_exhausted = True
+        return None
 
     def __getitem__(self, item: str) -> Type[ExtensionModules]:
         self.get(item)
