@@ -43,7 +43,7 @@ Source = "https://github.com/ofek/extensionlib"
 source = "vcs"
 
 [tool.hatch.build.hooks.vcs]
-version-file = "src/extension/_version.py"
+version-file = "src/extension/version.py"
 
 [tool.hatch.build.targets.sdist]
 [tool.hatch.build.targets.wheel]
