@@ -22,4 +22,4 @@ __pycache__/
 /.coverage*
 
 # Version file
-/src/extension/_version.py
+/src/extension/version.py
