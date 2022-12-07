@@ -2,28 +2,28 @@ from __future__ import annotations
 
 import sys
 from copy import deepcopy
-from typing import TYPE_CHECKING, Generator, Optional, Type
+from typing import TYPE_CHECKING, Generator
 
-from .constants import ENTRY_POINT_GROUP
-from .utils import get_env_option, normalize_relative_path
-
-if TYPE_CHECKING:
-    from .interface import ExtensionModules
+from extension.constants import ENTRY_POINT_GROUP
+from extension.utils import get_env_option, normalize_relative_path
 
 if sys.version_info >= (3, 8):
     from importlib.metadata import Distribution, EntryPoint
 else:
     from importlib_metadata import Distribution, EntryPoint
 
+if TYPE_CHECKING:
+    from extension.interface import ExtensionModules
+
 
 class BuilderCache:
-    def __init__(self):
+    def __init__(self) -> None:
         self.__resolver = Distribution.discover()
-        self.__builders: dict[str, Type[ExtensionModules]] = {}
+        self.__builders: dict[str, type[ExtensionModules]] = {}
         self.__seen: dict[str, EntryPoint] = {}
         self.__search_exhausted = False
 
-    def get(self, name: str) -> Optional[Type[ExtensionModules]]:
+    def get(self, name: str) -> type[ExtensionModules] | None:
         if name in self.__builders:
             return self.__builders[name]
         elif name in self.__seen:
@@ -50,7 +50,7 @@ class BuilderCache:
         self.__search_exhausted = True
         return None
 
-    def __getitem__(self, item: str) -> Type[ExtensionModules]:
+    def __getitem__(self, item: str) -> type[ExtensionModules]:
         self.get(item)
         return self.__builders[item]
 

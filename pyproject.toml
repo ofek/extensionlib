@@ -4,6 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "extensionlib"
+dynamic = ["version"]
 description = "The toolkit for building extension modules"
 readme = "README.md"
 requires-python = ">=3.7"
@@ -31,7 +32,6 @@ classifiers = [
 dependencies = [
   "importlib-metadata; python_version < '3.8'",
 ]
-dynamic = ["version"]
 
 [project.urls]
 Homepage = "https://ofek.dev/extensionlib/"
@@ -45,7 +45,6 @@ source = "vcs"
 [tool.hatch.build.hooks.vcs]
 version-file = "src/extension/version.py"
 
-[tool.hatch.build.targets.sdist]
 [tool.hatch.build.targets.wheel]
 packages = ["src/extension"]
 
@@ -64,25 +63,70 @@ warn_no_return = false
 warn_unused_ignores = true
 
 [tool.black]
-include = '\.pyi?$'
+target-version = ["py37"]
 line-length = 120
 skip-string-normalization = true
-target-version = ["py37"]
 
-[tool.isort]
-default_section = "THIRDPARTY"
-force_grid_wrap = 0
-include_trailing_comma = true
-known_first_party = ["extension"]
-line_length = 120
-multi_line_output = 3
-use_parentheses = true
+[tool.ruff]
+target-version = "py37"
+line-length = 120
+select = [
+  "A",
+  "B",
+  "C",
+  "E",
+  "F",
+  "FBT",
+  "I",
+  "N",
+  "Q",
+  "RUF",
+  "S",
+  "T",
+  "UP",
+  "W",
+  "YTT",
+]
+ignore = [
+  # Allow non-abstract empty methods in abstract base classes
+  "B027",
+  # Ignore McCabe complexity
+  "C901",
+  # Allow boolean positional values in function calls, like `dict.get(... True)`
+  "FBT003",
+  # Ignore checks for possible passwords
+  "S105", "S106", "S107",
+]
+unfixable = [
+  # Don't touch unused imports
+  "F401",
+]
+
+[tool.ruff.isort]
+known-first-party = ["extension"]
+
+[tool.ruff.flake8-quotes]
+inline-quotes = "single"
+
+[tool.ruff.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.per-file-ignores]
+"src/extension/version.py" = ["UP009"]
+# Tests can use relative imports and assertions
+"tests/**/*" = ["I252", "S101"]
 
 [tool.coverage.run]
+source_pkgs = ["extension", "tests"]
 branch = true
+parallel = true
 omit = [
   "tests/mocks/**/*",
 ]
+
+[tool.coverage.paths]
+extension = ["src/extension", "*/extensionlib/src/extension"]
+tests = ["tests", "*/extensionlib/tests"]
 
 [tool.coverage.report]
 exclude_lines = [

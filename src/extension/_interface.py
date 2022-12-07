@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from .utils import get_env_option
+from extension.utils import get_env_option
 
 
 class ExtensionModules(ABC):
