@@ -1,6 +1,6 @@
 import os
 
-from .constants import ENV_OPTION_PREFIX
+from extension.constants import ENV_OPTION_PREFIX
 
 
 def normalize_relative_path(path: str) -> str:

@@ -1,3 +1,3 @@
-from ._interface import ExtensionModules
+from extension._interface import ExtensionModules
 
 __all__ = ['ExtensionModules']
